@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Ong {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String
+  whatsappNumbe String
+  city          String
+  uf            Int
+  created_at    DateTime
+  cases         Case[]
+  ong_code      Int
+
+  ongCode OngCode @relation(fields: [ong_code], references: [code])
+}
+
+model Case {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  value       Float
+  created_at  DateTime
+  deleted_at  DateTime
+  ong_id      Int
+
+  ong Ong @relation(fields: [ong_id], references: [id])
+}
+
+model OngCode {
+  code Int
+  Ong  Ong[]
+
+  @@unique([code])
+}
